@@ -62,6 +62,36 @@
             font-size: 14px;
             color: #7f8c8d;
         }
+        .button-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+        .whatsapp-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #25D366;
+            color: white;
+            padding: 12px 20px;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .whatsapp-button:hover {
+            background-color: #128C7E;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+        .whatsapp-logo {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+        }
+        .whatsapp-text {
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
@@ -69,6 +99,12 @@
         <img src="https://github.com/RBcomputer/Logo/blob/main/circlelogo.PNG?raw=true?raw=true" alt="RB Computer Logo" class="logo">
         <h1>Stato di Lavorazione</h1>
         <div id="statusMessage">Caricamento...</div>
+        <div class="button-container">
+            <a href="https://wa.me/3392334249" class="whatsapp-button" target="_blank">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp Logo" class="whatsapp-logo">
+                <span class="whatsapp-text">Contatta il tecnico Roberto</span>
+            </a>
+        </div>
     </div>
     <div class="footer">
         TECNICO: Roberto Bonifazi - Assistenza Tecnica Computer Tel:339.2334249<br>
@@ -78,14 +114,14 @@
     <script>
         // Configurazione Firebase
         const firebaseConfig = {
-		  apiKey: "AIzaSyDLgKW1CzG9JoVv5kn6ldsjq964ciJU_j0",
-		  authDomain: "cartelleritaelena.firebaseapp.com",
-		  databaseURL: "https://cartelleritaelena-default-rtdb.firebaseio.com",
-		  projectId: "cartelleritaelena",
-		  storageBucket: "cartelleritaelena.appspot.com",
-		  messagingSenderId: "962122431377",
-		  appId: "1:962122431377:web:f1d43759ff9dcb232e3830",
-		  measurementId: "G-BJNKBXYX7C"
+          apiKey: "AIzaSyDLgKW1CzG9JoVv5kn6ldsjq964ciJU_j0",
+          authDomain: "cartelleritaelena.firebaseapp.com",
+          databaseURL: "https://cartelleritaelena-default-rtdb.firebaseio.com",
+          projectId: "cartelleritaelena",
+          storageBucket: "cartelleritaelena.appspot.com",
+          messagingSenderId: "962122431377",
+          appId: "1:962122431377:web:f1d43759ff9dcb232e3830",
+          measurementId: "G-BJNKBXYX7C"
         };
 
         // Inizializza Firebase
