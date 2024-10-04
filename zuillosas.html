@@ -159,14 +159,18 @@
         function loadStatus() {
             const trackingCode = getTrackingCodeFromUrl();
             if (trackingCode) {
-                db.ref('clientiRegistrati').orderByChild('codiceTracciamento').equalTo(trackingCode).once('value')
+                db.ref('clientiRegistrati').once('value')
                     .then((snapshot) => {
-                        if (snapshot.exists()) {
-                            snapshot.forEach((childSnapshot) => {
-                                const client = childSnapshot.val();
-                                updateStatus(client.statoLavoro);
-                            });
-                        } else {
+                        let found = false;
+                        snapshot.forEach((childSnapshot) => {
+                            const client = childSnapshot.val();
+                            if (client.codiceTracciamento === trackingCode) {
+                                updateStatus(client.statoLavoro || 'Stato non disponibile');
+                                found = true;
+                                return true; // Esce dal ciclo forEach
+                            }
+                        });
+                        if (!found) {
                             updateStatus('Codice di tracciamento non valido');
                         }
                     })
