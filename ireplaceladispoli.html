@@ -1,194 +1,411 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stato di Lavorazione - RB.Computer</title>
-    <link rel="icon" href="https://i.imgur.com/ILUadWh.png" type="image/png">
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f4f4f4;
-        }
-        .container {
-            background-color: #fff;
-            border-radius: 5px;
-            padding: 20px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        h1 {
-            color: #3498db;
-            text-align: center;
-        }
-        #statusMessage {
-            font-size: 18px;
-            margin-top: 20px;
-            padding: 10px;
-            border-radius: 5px;
-            text-align: center;
-        }
-        .status-pending {
-            background-color: #ffeaa7;
-            color: #d35400;
-        }
-        .status-in-progress {
-            background-color: #81ecec;
-            color: #00b894;
-        }
-        .status-completed {
-            background-color: #55efc4;
-            color: #00b894;
-        }
-        .status-error {
-            background-color: #fab1a0;
-            color: #d63031;
-        }
-        .logo {
-            display: block;
-            margin: 0 auto 20px;
-            max-width: 100px;
-        }
-        .footer {
-            margin-top: 20px;
-            text-align: center;
-            font-size: 14px;
-            color: #7f8c8d;
-        }
-        .button-container {
-            text-align: center;
-            margin-top: 30px;
-        }
-        .whatsapp-button {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #25D366;
-            color: white;
-            padding: 12px 20px;
-            text-decoration: none;
-            border-radius: 50px;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        .whatsapp-button:hover {
-            background-color: #128C7E;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
-        }
-        .whatsapp-logo {
-            width: 24px;
-            height: 24px;
-            margin-right: 10px;
-        }
-        .whatsapp-text {
-            font-size: 16px;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stato di Lavorazione - RB.Computer</title>
+<link rel="icon" href="https://i.imgur.com/ILUadWh.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+<style>
+  :root{
+    --bg: #EEF2F7;
+    --card: #FFFFFF;
+    --ink: #16202E;
+    --ink-soft: #5B6B7F;
+    --line: #DDE4EC;
+    --amber: #E2740F;
+    --amber-soft: #FCE9D6;
+    --teal: #0E7C66;
+    --teal-soft: #DCF1EB;
+    --red: #C4432B;
+    --red-soft: #FBE2DC;
+    --radius: 14px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Inter', system-ui, sans-serif;
+    background:
+      radial-gradient(circle at 15% 0%, #F6F9FC 0%, var(--bg) 55%);
+    color:var(--ink);
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    padding:40px 18px 28px;
+  }
+  .wrap{ width:100%; max-width:460px; }
+
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:22px;
+  }
+  .brand img{ width:42px; height:42px; border-radius:9px; }
+  .brand-text{ line-height:1.25; }
+  .brand-text .name{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:700;
+    font-size:17px;
+    letter-spacing:-0.01em;
+  }
+  .brand-text .role{ font-size:12.5px; color:var(--ink-soft); }
+
+  .card{
+    background:var(--card);
+    border-radius:var(--radius);
+    border:1px solid var(--line);
+    box-shadow:0 1px 2px rgba(22,32,46,0.04), 0 12px 28px -18px rgba(22,32,46,0.35);
+    overflow:hidden;
+  }
+
+  .card-head{
+    padding:26px 26px 6px;
+  }
+  .eyebrow-code{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+    color:var(--ink-soft);
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .eyebrow-code .dot{
+    width:6px; height:6px; border-radius:50%;
+    background:var(--amber);
+    flex:none;
+  }
+  h1{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:22px;
+    font-weight:600;
+    margin:8px 0 2px;
+    letter-spacing:-0.01em;
+  }
+  .sub{ font-size:13.5px; color:var(--ink-soft); margin-bottom:6px; }
+
+  /* Stepper */
+  .stepper{
+    padding:22px 26px 6px;
+    display:flex;
+  }
+  .step{
+    flex:1;
+    text-align:center;
+    position:relative;
+  }
+  .step .track{
+    position:absolute;
+    top:13px; left:-50%; width:100%; height:2px;
+    background:var(--line);
+    z-index:0;
+  }
+  .step:first-child .track{ display:none; }
+  .step.done .track, .step.current .track{ background:var(--amber); }
+  .node{
+    width:27px; height:27px;
+    border-radius:50%;
+    background:var(--card);
+    border:2px solid var(--line);
+    color:var(--ink-soft);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px;
+    font-weight:600;
+    margin:0 auto;
+    position:relative; z-index:1;
+    transition:border-color .25s ease, background .25s ease, color .25s ease;
+  }
+  .step.done .node{
+    background:var(--amber);
+    border-color:var(--amber);
+    color:#fff;
+  }
+  .step.current .node{
+    border-color:var(--amber);
+    color:var(--amber);
+    box-shadow:0 0 0 4px var(--amber-soft);
+  }
+  .step.final.current .node,
+  .step.final.done .node{
+    background:var(--teal);
+    border-color:var(--teal);
+    color:#fff;
+    box-shadow:0 0 0 4px var(--teal-soft);
+  }
+  .step-label{
+    font-size:10.5px;
+    color:var(--ink-soft);
+    margin-top:7px;
+    line-height:1.25;
+    padding:0 2px;
+  }
+  .step.done .step-label, .step.current .step-label{ color:var(--ink); font-weight:500; }
+
+  /* Status panel */
+  .status-panel{
+    margin:20px 26px 26px;
+    border-radius:10px;
+    padding:16px 18px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    font-size:14.5px;
+    font-weight:500;
+    border:1px solid transparent;
+  }
+  .status-panel .icon{
+    width:34px; height:34px; border-radius:9px;
+    display:flex; align-items:center; justify-content:center;
+    flex:none;
+    font-size:16px;
+  }
+  .status-pending{ background:var(--amber-soft); color:#8A4A0C; }
+  .status-pending .icon{ background:#F6D6AE; }
+  .status-in-progress{ background:var(--amber-soft); color:#8A4A0C; }
+  .status-in-progress .icon{ background:#F6D6AE; }
+  .status-completed{ background:var(--teal-soft); color:#0B5C4C; }
+  .status-completed .icon{ background:#BFE7DB; }
+  .status-error{ background:var(--red-soft); color:#8E3121; }
+  .status-error .icon{ background:#F2C4B7; }
+
+  .status-label{ font-size:10.5px; text-transform:uppercase; letter-spacing:.04em; opacity:.75; display:block; margin-bottom:2px; font-weight:600;}
+
+  .divider{ height:1px; background:var(--line); margin:0 26px; }
+
+  .contact{
+    padding:20px 26px 26px;
+  }
+  .contact p{
+    font-size:13px;
+    color:var(--ink-soft);
+    margin:0 0 14px;
+  }
+  .whatsapp-button{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:9px;
+    background:#1FAE5A;
+    color:#fff;
+    padding:13px 18px;
+    text-decoration:none;
+    border-radius:10px;
+    font-weight:600;
+    font-size:14.5px;
+    transition:background .2s ease, transform .2s ease;
+  }
+  .whatsapp-button:hover{ background:#188E49; transform:translateY(-1px); }
+  .whatsapp-button svg{ width:19px; height:19px; flex:none; }
+
+  .footer{
+    margin-top:22px;
+    text-align:center;
+    font-size:12px;
+    line-height:1.7;
+    color:var(--ink-soft);
+  }
+  .footer strong{ color:var(--ink); }
+
+  @media (max-width:420px){
+    .card-head, .stepper, .status-panel, .contact{ padding-left:20px; padding-right:20px; }
+    .divider{ margin-left:20px; margin-right:20px; }
+    .status-panel{ margin-left:20px; margin-right:20px; }
+    .step-label{ font-size:9.8px; }
+  }
+</style>
 </head>
 <body>
-    <div class="container">
-        <img src="https://i.imgur.com/ILUadWh.png" alt="RB Computer Logo" class="logo">
-        <h1>Stato di Lavorazione</h1>
-        <div id="statusMessage">Caricamento...</div>
-        <div class="button-container">
-            <a href="https://wa.me/3392334249" class="whatsapp-button" target="_blank">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp Logo" class="whatsapp-logo">
-                <span class="whatsapp-text">Contatta il tecnico Roberto</span>
-            </a>
-        </div>
+<div class="wrap">
+
+  <div class="brand">
+    <img src="https://i.imgur.com/ILUadWh.png" alt="RB Computer">
+    <div class="brand-text">
+      <div class="name">RB.Computer</div>
+      <div class="role">Assistenza tecnica computer</div>
     </div>
-    <div class="footer">
-        TECNICO: Roberto Bonifazi - Assistenza Tecnica Computer Tel:339.2334249<br>
-        PUNTO DI RITIRO: Ireplace, Via Palermo 78/L, Ladispoli (RM)
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <div class="eyebrow-code"><span class="dot"></span><span id="codeLabel">Codice di tracciamento</span></div>
+      <h1>Stato riparazione</h1>
+      <div class="sub" id="subLine">Verifica in corso…</div>
     </div>
 
-    <script>
-        // Configurazione Firebase
-        const firebaseConfig = {
-            apiKey: "AIzaSyB0eTaiuZLyqt3ZzFMV-5pP9PYb4NTBWPA",
-            authDomain: "ireplace-1383b.firebaseapp.com",
-            databaseURL: "https://ireplace-1383b-default-rtdb.firebaseio.com",
-            projectId: "ireplace-1383b",
-            storageBucket: "ireplace-1383b.firebasestorage.app",
-            messagingSenderId: "558766611362",
-            appId: "1:558766611362:web:232a4c5c1e5d11627030fb",
-            measurementId: "G-H6XWQE56HM"
-            };
+    <div class="stepper" id="stepper">
+      <div class="step" data-stage="1">
+        <div class="track"></div>
+        <div class="node">1</div>
+        <div class="step-label">Ricevuto</div>
+      </div>
+      <div class="step" data-stage="2">
+        <div class="track"></div>
+        <div class="node">2</div>
+        <div class="step-label">In lavorazione</div>
+      </div>
+      <div class="step" data-stage="3">
+        <div class="track"></div>
+        <div class="node">3</div>
+        <div class="step-label">Pronto al ritiro</div>
+      </div>
+      <div class="step final" data-stage="4">
+        <div class="track"></div>
+        <div class="node">✓</div>
+        <div class="step-label">Completato</div>
+      </div>
+    </div>
 
-        // Inizializza Firebase
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
-        const auth = firebase.auth();
+    <div id="statusMessage" class="status-panel status-pending">
+      <div class="icon">⏳</div>
+      <div>
+        <span class="status-label">Stato attuale</span>
+        <span id="statusText">Caricamento…</span>
+      </div>
+    </div>
 
-        function getTrackingCodeFromUrl() {
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get('code');
-        }
+    <div class="divider"></div>
 
-        function updateStatus(status) {
-            const statusMessage = document.getElementById('statusMessage');
-            statusMessage.textContent = `Stato attuale: ${status}`;
-            
-            statusMessage.className = '';
-            switch(status) {
-                case 'Preso in carico':
-                    statusMessage.classList.add('status-pending');
-                    break;
-                case 'In lavorazione':
-                case 'In attesa di parti':
-                    statusMessage.classList.add('status-in-progress');
-                    break;
-                case 'Completato':
-                case 'Pronto per il ritiro':
-                    statusMessage.classList.add('status-completed');
-                    break;
-                default:
-                    statusMessage.classList.add('status-error');
-            }
-        }
+    <div class="contact">
+      <p>Domande sulla riparazione o sui tempi di consegna? Scrivi direttamente al tecnico.</p>
+      <a href="https://wa.me/3392334249" class="whatsapp-button" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.472-.148-.67.15-.198.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.095 3.2 5.076 4.487.71.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12.004 2.003c-5.514 0-9.997 4.483-9.997 9.997 0 1.762.462 3.482 1.34 4.997L2 22l5.116-1.341a9.958 9.958 0 0 0 4.888 1.246h.004c5.514 0 9.997-4.483 9.997-9.997 0-2.671-1.04-5.182-2.929-7.071a9.935 9.935 0 0 0-7.072-2.834zm5.848 15.845a8.269 8.269 0 0 1-5.848 2.422h-.003a8.276 8.276 0 0 1-4.212-1.152l-.302-.18-3.038.797.812-2.962-.197-.304a8.263 8.263 0 0 1-1.267-4.415c0-4.573 3.722-8.295 8.298-8.295a8.24 8.24 0 0 1 5.868 2.433 8.234 8.234 0 0 1 2.428 5.866c0 4.574-3.722 8.29-8.539 8.29z"/></svg>
+        Scrivi su WhatsApp
+      </a>
+    </div>
+  </div>
 
-        function loadStatus() {
-            const trackingCode = getTrackingCodeFromUrl();
-            if (trackingCode) {
-                db.ref('clientiRegistrati').orderByChild('codiceTracciamento').equalTo(trackingCode).once('value')
-                    .then((snapshot) => {
-                        if (snapshot.exists()) {
-                            snapshot.forEach((childSnapshot) => {
-                                const client = childSnapshot.val();
-                                updateStatus(client.statoLavoro);
-                            });
-                        } else {
-                            updateStatus('Codice di tracciamento non valido');
-                        }
-                    })
-                    .catch((error) => {
-                        console.error("Errore nel caricamento dello stato: ", error);
-                        updateStatus('Errore nel caricamento dello stato');
-                    });
-            } else {
-                updateStatus('Codice di tracciamento mancante');
-            }
-        }
+  <div class="footer">
+    <strong>Roberto Bonifazi</strong> — Tel. 339 233 4249<br>
+    Punto di ritiro: Ireplace, Via Palermo 78/L, Ladispoli (RM)
+  </div>
+</div>
 
-        // Autenticazione anonima e caricamento dello stato
-        auth.signInAnonymously()
-            .then(() => {
-                console.log("Autenticazione anonima riuscita");
-                loadStatus();
-            })
-            .catch((error) => {
-                console.error("Errore nell'autenticazione anonima: ", error);
-                updateStatus('Errore di autenticazione');
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyB0eTaiuZLyqt3ZzFMV-5pP9PYb4NTBWPA",
+    authDomain: "ireplace-1383b.firebaseapp.com",
+    databaseURL: "https://ireplace-1383b-default-rtdb.firebaseio.com",
+    projectId: "ireplace-1383b",
+    storageBucket: "ireplace-1383b.firebasestorage.app",
+    messagingSenderId: "558766611362",
+    appId: "1:558766611362:web:232a4c5c1e5d11627030fb",
+    measurementId: "G-H6XWQE56HM"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+  const auth = firebase.auth();
+
+  const STAGE_BY_STATUS = {
+    'Preso in carico': 1,
+    'In lavorazione': 2,
+    'In attesa di parti': 2,
+    'Pronto per il ritiro': 3,
+    'Completato': 4
+  };
+
+  const ICONS = {
+    pending: '⏳',
+    progress: '🛠️',
+    completed: '✅',
+    error: '⚠️'
+  };
+
+  function getTrackingCodeFromUrl() {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get('code');
+  }
+
+  function setStepper(stage) {
+    document.querySelectorAll('#stepper .step').forEach((el) => {
+      const n = parseInt(el.dataset.stage, 10);
+      el.classList.remove('done', 'current');
+      if (stage && n < stage) el.classList.add('done');
+      if (stage && n === stage) el.classList.add('current');
+    });
+  }
+
+  function updateStatus(status) {
+    const panel = document.getElementById('statusMessage');
+    const text = document.getElementById('statusText');
+    const icon = panel.querySelector('.icon');
+    const sub = document.getElementById('subLine');
+
+    text.textContent = status;
+    panel.className = 'status-panel';
+
+    const stage = STAGE_BY_STATUS[status] || 0;
+    setStepper(stage);
+
+    switch (status) {
+      case 'Preso in carico':
+        panel.classList.add('status-pending');
+        icon.textContent = ICONS.pending;
+        sub.textContent = 'Il dispositivo è stato registrato ed è in coda.';
+        break;
+      case 'In lavorazione':
+      case 'In attesa di parti':
+        panel.classList.add('status-in-progress');
+        icon.textContent = ICONS.progress;
+        sub.textContent = status === 'In attesa di parti'
+          ? 'In lavorazione, in attesa di un ricambio.'
+          : 'Il tecnico sta lavorando sul dispositivo.';
+        break;
+      case 'Completato':
+      case 'Pronto per il ritiro':
+        panel.classList.add('status-completed');
+        icon.textContent = ICONS.completed;
+        sub.textContent = status === 'Completato'
+          ? 'Riparazione conclusa e dispositivo ritirato.'
+          : 'Il dispositivo è pronto, puoi passare a ritirarlo.';
+        break;
+      default:
+        panel.classList.add('status-error');
+        icon.textContent = ICONS.error;
+        sub.textContent = 'Controlla il codice o contatta il tecnico su WhatsApp.';
+    }
+  }
+
+  function loadStatus() {
+    const trackingCode = getTrackingCodeFromUrl();
+    const codeLabel = document.getElementById('codeLabel');
+    if (trackingCode) {
+      codeLabel.textContent = 'Codice ' + trackingCode;
+      db.ref('clientiRegistrati').orderByChild('codiceTracciamento').equalTo(trackingCode).once('value')
+        .then((snapshot) => {
+          if (snapshot.exists()) {
+            snapshot.forEach((childSnapshot) => {
+              const client = childSnapshot.val();
+              updateStatus(client.statoLavoro);
             });
-    </script>
+          } else {
+            updateStatus('Codice di tracciamento non valido');
+          }
+        })
+        .catch((error) => {
+          console.error("Errore nel caricamento dello stato: ", error);
+          updateStatus('Errore nel caricamento dello stato');
+        });
+    } else {
+      updateStatus('Codice di tracciamento mancante');
+    }
+  }
+
+  auth.signInAnonymously()
+    .then(() => {
+      console.log("Autenticazione anonima riuscita");
+      loadStatus();
+    })
+    .catch((error) => {
+      console.error("Errore nell'autenticazione anonima: ", error);
+      updateStatus('Errore di autenticazione');
+    });
+</script>
 </body>
 </html>
