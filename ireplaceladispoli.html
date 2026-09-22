@@ -304,7 +304,7 @@
 
   const STAGE_BY_STATUS = {
     'Preso in carico': 1,
-    'In lavorazione, potresti essere contatto a breve': 2,
+    'In lavorazione': 2,
     'In attesa di parti': 2,
     'Pronto per il ritiro': 3,
     'Completato': 4
@@ -349,7 +349,7 @@
         icon.textContent = ICONS.pending;
         sub.textContent = 'Il dispositivo è stato registrato ed è in coda.';
         break;
-      case 'In lavorazione':
+      case 'In lavorazione, potresti essere contatto a breve':
       case 'In attesa di parti':
         panel.classList.add('status-in-progress');
         icon.textContent = ICONS.progress;
